@@ -1,0 +1,58 @@
+﻿
+
+    <div id="previewModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ngarkoni dokumenta</h4>
+                    <button type="button" class="close" id="mbyllModal" data-dismiss="modal" onclick="mbyllModal()" data-toggle="tooltip" title="Mbyll">
+                        &times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("Preview", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <label for="fusha" style="font-size:18px; font-weight:500">Fusha indeksimi</label>
+                        <div class="form-group form-inline" style="width:100%; ">
+                            <div class="row">
+                                <div class="col" style="margin-right:180px;">
+                                    <div class="form-group" style="width:300px;">
+                                        <input type="text" data-role="tagsinput" autocomplete="off" style="width:300px; height:95%; font-size:14px;" id="fusha" name="Indeksimet">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-secondary" type="button">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <label for="vend" style="font-size:18px; font-weight:500">Vendndodhja</label>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" name="Zyra" class="form-control" placeholder="Zyra" autocomplete="off">
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="NrKutise" class="form-control" placeholder="Numri i kutisë" autocomplete="off">
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="Rafti" class="form-control" placeholder="Rafti" style="margin-bottom:15px " autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="files-container" id="files-container">
+
+                        </div>
+                        <div class="modal-footer">
+                            <div id="preview">
+                                <iframe src="" style=" width: 800px; height: 600px"> </iframe>
+                            </div>
+                            <button class="btn btn-success" type="submit" id="kerko" style=" margin-left:95px; margin-right:5px; margin-top:20px">Shto</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+

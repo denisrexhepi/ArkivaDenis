@@ -1,0 +1,247 @@
+﻿@model  ArkivaDenis.helperclass.Filters
+
+
+@{
+    ViewBag.Title = "Inspektime";
+}
+
+<head>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/bootstrap.css" />
+
+    <script>
+        $(function () {
+            $("#fillimi").datepicker(
+                {
+                    endDate: '-1d',
+                    clearBtn: true,
+                    autoclose: true,
+                    dateFormat: "dd.mm.yyyy"
+                });
+            $("#mbarimi").datepicker(
+                {
+                    maxDate: new Date('2018-3-26'),
+                    clearBtn: true,
+                    autoclose: true,
+                    endDate: '+0d'
+                });
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</head>
+
+
+<body>
+    <div class="navbar-wrapper">
+        <div class="container-fluid">
+            <nav class="navbar navbar-dark bg-primary">
+                <a href="@Url.Action("Index", "Home")">  <h2 class="navbar-header"> Arkiva</h2></a>
+                <div class="pull-right">
+                    <ul class="nav navbar-nav">
+                        <h5 style="color:white;">
+                            Mirësevini @Session["CurrentUserName"]
+                            @Html.ActionLink("Dilni", "Login", "Home", routeValues: null, htmlAttributes: new { @class = "btn navbar-btn btn-danger" })
+                    </ul>
+                </div>
+            </nav>
+
+
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top"
+                title="Shto" id="shto" disabled>
+            <i class="fa fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top"
+                title="Shiko" disabled>
+            <i class="fa fa-eye"></i>
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top"
+                title="Fshi" disabled>
+            <i class="fa fa-trash"></i>
+        </button>
+        <button type="button" class="btn btn-primary" name="shkarko" onclick="shkarkoZip()" data-toggle="tooltip" data-placement="top"
+                title="Shkarko" disabled>
+            <i class="fa fa-download"></i>
+        </button>
+
+        @using (Html.BeginForm("Kerko", "Home", FormMethod.Post))
+        {
+            <div class="form-group">
+                <label for="subjekt" style="font-size:18px;  font-weight:500; margin-top:15px">Subjekti</label>
+                <input type="text" class="form-control" id="emersubjekt" name="Subjekte"  style="width : 300px; margin-bottom:    15px " autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="nrinspek" style="font-size:18px;  font-weight:500 ">Inspektimi</label>
+                <input type="text" class="form-control" autocomplete="off" name="Inspektime"  id="nrinspek" style="width : 300px;  margin-bottom:    15px">
+            </div>
+            <div class="form-group">
+                <label for="llojdok" style="font-size:18px; font-weight:500">Lloj Dokumenti</label>
+                <div class="form-group" style="width : 300px">
+                    <select class="form-control" id="llojdok" name="Lloj" style=" margin-bottom:    15px">
+                        <option value="">Zgjidhni llojin e dokumentit</option>
+                        <option value="Fatura">Fatura</option>
+                        <option value="Bilance">Bilance</option>
+                        <option value="Raporte">Raporte</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="emerdok" style="font-size:18px; font-weight:500">Emër Dokumenti</label>
+                <input type="text" class="form-control" name="Emer" autocomplete="off" id="emerdok"  style="width : 300px; margin-bottom:    15px ">
+            </div>
+            <div class="form-group">
+                <label for="fushaindeks" style="font-size:18px; font-weight:500 ">Fusha Indeksimi</label>
+                <input type="text" class="form-control" name="Indeksimet"  id="fushaindeks" style="width : 300px; margin-bottom:15px " autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="vend" style="font-size:18px; font-weight:500">Vendndodhja</label>
+                <div class="row" style="width : 330px">
+                    <div class="col">
+                        <input type="text" class="form-control" name="Zyra" placeholder="Zyra"  autocomplete="off" style="width:80px">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="NrKutise" placeholder="Numri"  autocomplete="off" style="width:80px">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="Rafti" placeholder="Rafti"  autocomplete="off" style="width:80px; margin-bottom:    15px ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="data" style="font-size:18px; font-weight:500"> Data </label>
+                <div class="row justify-content-center" style="width : 320px">
+                    <div class="col">
+                        <input type="text" class="form-control" style="width:135px; margin-left:-2px" id="fillimi"  placeholder="dd/mm/yyyy" autocomplete="off">
+                    </div> -
+                    <div class="col">
+                        <input type="text" class="form-control" style="width:135px; margin-right: -5px;" id="mbarimi"  placeholder="dd/mm/yyyy" autocomplete="off">
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <div class="flex-column-reverse">
+                    <button class="btn btn-primary" id="kerko" style=" margin-left:95px; margin-right:5px; margin-top:20px">Kërko</button>
+                </div>
+                <div class="flex-column-reverse">
+                    <button type="reset" class="btn btn-secondary" style=" margin-top:20px">Pastro</button>
+                </div>
+            </div>
+            
+        }
+    </div>
+
+
+
+    <div class="vertical-row"></div>
+
+
+    <div class="djathtas">
+        <div id="subjektet">
+            <nav class="breadcrumb" style="margin-left:-5px;">
+                <input type="checkbox" name="subjekt" style="margin-left:-10px" class="form-check-input" />
+                <a href="@Url.Action("Index", "Home")" class="breadcrumb-item" style="font-size:18px; margin-left:10px; font-weight:500; color:red;">Subjektet</a>
+                <span class="breadcrumb-item active" style="font-size:18px; font-weight:500; color:darkslategrey;">@ViewBag.Data </span>
+            </nav>
+          
+                    <div class="form-check">
+                        @foreach (var item in @ViewBag.Inspektime)
+                        {
+                            <input type="checkbox" name="checkbox" class="form-check-inline" value="@item.Id" id="@item.NrInspek" />
+                            <img src="~/images/folder.png" onclick="klikoFolder(@item.Id)" />
+                            <label class="form-check-label" for="@item.NrInspek" style="margin-right:20px; font-size:18px;">  @item.NrInspek</label>
+                        }
+                    </div>
+              
+            <script type="text/javascript">
+                function klikoFolder(id) {
+                    window.location.replace("/Home/LlojDokumenti/" + id);
+                }
+            </script>
+
+            <script>
+                $("input[name='subjekt']").on('change', function () {
+                    $("button[name='shkarko']").prop('disabled', !$("input[name='subjekt']:checked").length);
+                })
+            </script>
+
+            <script>
+                $("input[name='checkbox']").on('change', function () {
+                    $("button[name='shkarko']").prop('disabled', !$("input[name='subjekt']:checked").length);
+                })
+            </script>
+
+            <script>
+                $("input[name='checkbox']").on('change', function () {
+                    $("input[name='checkbox']").not(this).prop('checked', false);
+                });
+            </script>
+
+
+            <script>
+                $("input[name='checkbox']").on('change', function () {
+                    $("button[name='shkarko']").prop('disabled', !$("input[name='checkbox']:checked").length);
+                })
+            </script>
+
+            <script>
+                $("input[name='checkbox']").on('change', function () {
+                    $("input[name='subjekt']").prop('checked', false);
+                })
+            </script>
+
+            <script>
+                $("input[name='subjekt']").on('change', function () {
+                    $("input[name='checkbox']").prop('checked', false);
+                })
+            </script>
+
+            <script>
+                function shkarkoZip() {
+                    if ($("input[name='subjekt']:checked").val() == "on") {
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Action("ShkarkoZipSubjekt", "Home")',
+                            contentType: "application/json; charset=utf-8",
+                            success: function () {
+                                window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "ShkarkoZipSubjekt" })";
+                            }
+                        })
+                    }
+
+                    else {
+                        var Inspektim_Id = $("input[name='checkbox']:checked").val();
+                           $.ajax({
+                               type: "GET",
+                               url: '@Url.Action("ShkarkoInspektimSpecifk", "Home", new {Inspektim_Id = 6 })',
+                               contentType: "application/json; charset=utf-8",
+                               data: JSON.stringify({
+                                   'Inspektim_Id': Inspektim_Id
+                               }),
+                               success: function () {
+                                   window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "ShkarkoInspektimSpecifk" })/?Inspektim_Id=" + Inspektim_Id;
+                               }
+                            })
+                        }
+                }
+            </script>
+
+        </div>
+    </div>
+</body>

@@ -1,0 +1,450 @@
+﻿@model  IEnumerable<ArkivaDenis.helperclass.Filters>
+
+@{
+    ViewBag.Title = "LlojDokumenti";
+}
+
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-tagsinput.css" />
+<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+
+
+<script>
+    $(function () {
+        $("#fillimi").datepicker(
+            {
+                endDate: '-1d',
+                clearBtn: true,
+                autoclose: true,
+                dateFormat: "dd.mm.yyyy"
+            });
+        $("#mbarimi").datepicker(
+            {
+                maxDate: new Date('2018-3-26'),
+                clearBtn: true,
+                autoclose: true,
+                endDate: '+0d'
+            });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
+
+
+
+<body>
+    <div class="navbar-wrapper">
+        <div class="container-fluid">
+            <nav class="navbar navbar-dark bg-primary">
+                <a href="@Url.Action("Index", "Home")">  <h2 class="navbar-header"> Arkiva</h2></a>
+                <div class="pull-right">
+                    <ul class="nav navbar-nav">
+                        <h5 style="color:white;">
+                            Mirësevini @Session["CurrentUserName"]
+                            @Html.ActionLink("Dilni", "Login", "Home", routeValues: null, htmlAttributes: new { @class = "btn navbar-btn btn-danger" })
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+
+    <div class="col-md-4">
+        <button type="button" class="btn btn-primary" name="shto" data-toggle="modal" data-target="#myModal" data-placement="top"
+                title="Shto">
+            <i class="fa fa-plus"></i>
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top"
+                title="Shiko" disabled>
+            <i class="fa fa-eye"></i>
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="top"
+                title="Fshi" disabled>
+            <i class="fa fa-trash"></i>
+        </button>
+        <button type="button" class="btn btn-primary" name="shkarko" onclick="shkarkoZip()" data-toggle="tooltip" data-placement="top"
+                title="Shkarko" disabled>
+            <i class="fa fa-download"></i>
+        </button>
+
+        @using (Html.BeginForm("Kerko", "Home", FormMethod.Get))
+        {
+            <div class="form-group">
+                <label for="subjekt" style="font-size:18px;  font-weight:500; margin-top:15px">Subjekti</label>
+                <input type="text" class="form-control" id="emersubjekt" name="Subjekte" style="width : 300px; margin-bottom:    15px " autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="nrinspek" style="font-size:18px;  font-weight:500 ">Inspektimi</label>
+                <input type="text" class="form-control" autocomplete="off" name="Inspektime" id="nrinspek" style="width : 300px;  margin-bottom:    15px" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label for="llojdok" style="font-size:18px; font-weight:500">Lloj Dokumenti</label>
+                <div class="form-group" style="width : 300px">
+                    <select class="form-control" id="Lloj" name="Lloj" style=" margin-bottom:    15px">
+                        <option value="">Zgjidhni llojin e dokumentit</option>
+                        <option value="Fatura">Fatura</option>
+                        <option value="Bilance">Bilance</option>
+                        <option value="Raporte">Raporte</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="emerdok" style="font-size:18px; font-weight:500">Emër Dokumenti</label>
+                <input type="text" class="form-control" autocomplete="off" id="emerdok" style="width : 300px; margin-bottom:    15px ">
+            </div>
+            <div class="form-group">
+                <label for="fushaindeks" style="font-size:18px; font-weight:500 ">Fusha Indeksimi</label>
+                <input type="text" class="form-control" id="fushaindeks" style="width : 300px; margin-bottom:    15px ">
+            </div>
+
+            <div class="form-group">
+                <label for="vend" style="font-size:18px; font-weight:500">Vendndodhja</label>
+                <div class="row" style="width : 330px">
+                    <div class="col">
+                        <input type="text" class="form-control" name="Zyra" placeholder="Zyra" style="width:80px">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="NrKutise" placeholder="Numri" style="width:80px">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="Rafti" placeholder="Rafti" style="width:80px; margin-bottom:    15px ">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="data" style="font-size:18px; font-weight:500">Data</label>
+                <div class="row justify-content-center" style="width:320px">
+                    <div class="col">
+                        <input type="text" class="form-control" style="width:135px; margin-left:-2px" id="fillimi" placeholder="dd/mm/yyyy" autocomplete="off">
+                    </div> -
+                    <div class="col">
+                        <input type="text" class="form-control" style="width:135px; margin-right: -5px;" id="mbarimi" placeholder="dd/mm/yyyy" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="flex-column-reverse">
+                    <button class="btn btn-primary" id="kerko" style=" margin-left:95px; margin-right:5px; margin-top:20px">Kërko</button>
+                </div>
+                <div class="flex-column-reverse">
+                    <button type="reset" class="btn btn-secondary" style=" margin-top:20px">Pastro</button>
+                </div>
+            </div>
+
+        }
+    </div>
+
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ngarkoni dokumenta</h4>
+                    <button type="button" class="close" data-dismiss="modal" onclick="mbyllModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("Shto", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <label for="llojdok" style="font-size:18px; font-weight:500;">Lloji i dokumentit</label>
+                        <div class="form-group form-inline" style="width:100%; ">
+                            <div class="row" style="width:550px">
+                                <div class="col" style="margin-right:75px;">
+                                    <select class="form-control" name="Lloj" id="Lloj" style="width:300px; height:95%; font-size:14px;" required
+                                            oninvalid="this.setCustomValidity('Zgjidhni llojin e dokumentit')"
+                                            oninput="this.setCustomValidity('')">
+                                        <option value="">Zgjidhni llojin e dokumentit</option>
+                                        <option value="Fatura">Fatura</option>
+                                        <option value="Bilance">Bilance</option>
+                                        <option value="Raporte">Raporte</option>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                                    <label for="files" class="custom-input">
+                                        <input id="files" style="position:absolute; display:none" type="file" name="file" required multiple>
+                                        <span id="files-count" style=" width:30px; font-size:14px; ">Ngarko</span>
+                                    </label>
+                                    @if (TempData["UserMessage"] != null)
+                                    {
+                                        <script type="text/javascript">
+                                            window.onload = function () {
+                                                alert("@TempData["UserMessage"]");
+                                                };
+                                        </script>
+
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <label for="fusha" style="font-size:18px; font-weight:500">Fusha indeksimi</label>
+                        <div class="form-group form-inline" style="width:100%; ">
+                            <div class="row">
+                                <div class="col" style="margin-right:180px;">
+                                    <div class="form-group" style="width:300px;">
+                                        <input type="text" data-role="tagsinput" autocomplete="off" style="width:300px; height:95%; font-size:14px;" id="fusha" required name="Indeksimet"
+                                               oninvalid="this.setCustomValidity('Zgjidhni llojin e dokumentit')"
+                                               oninput="this.setCustomValidity('')">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-secondary" type="button">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <label for="vend" style="font-size:18px; font-weight:500">Vendodhja fizike e dokumentit</label>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" name="Zyra" id="zyraUpload" class="form-control" placeholder="Zyra" autocomplete="off">
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="NrKutise" class="form-control" id="kutiaUpload" placeholder="Numri i kutisë" autocomplete="off">
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="Rafti" class="form-control" placeholder="Rafti" id="raftiUpload" style="margin-bottom:15px " autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="files-container" id="files-container"></div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success" type="submit" id="kerko" style=" margin-left:95px; margin-right:5px; margin-top:20px" onclick="kontrolloNgarkim()">Shto</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="vertical-row"></div>
+
+
+    <div class="djathtas">
+        <div id="subjektet">
+            <nav class="breadcrumb" style="margin-left:-5px;">
+                <input type="checkbox" name="subjekt" style="margin-left:-10px" class="form-check-input" />
+                <a href="@Url.Action("Index", "Home")" style="font-size:18px; color:red; font-weight:500; margin-left:10px;" class="breadcrumb-item">Subjektet</a>
+                <a href="@Url.Action("Inspektime", "Home", new { id = ViewBag.Subjekt })" style="font-size:18px; font-weight:500;   color:red;" class="breadcrumb-item">@ViewData["subjekte"]</a>
+                <span class="breadcrumb-item active" style="font-size:18px; font-weight:500;   color:darkslategray;">@ViewData["inspektime"].ToString()</span>
+            </nav>
+            <div class="form-check">
+                @{int i = 0; }
+                @if (ViewBag.Data != null)
+                {
+                    foreach (var item in ViewBag.Data)
+                    {
+                        <input type="checkbox" name="Checkboxes" class="form-check-inline" value="@item.Id" id="@item.Emer" />
+                        <img src="~/images/folder.png" onclick="klikoFolder('@ViewBag.Subjekt', '@ViewBag.inspektim' ,'@item.Id')" />
+                        <label class="form-check-label" style="margin-right:20px; font-size:18px;" for="@item.Id">  @item.Emer</label>
+                        i += 1;
+                        Session["subjekt"] = ViewBag.Subjekt;
+                        Session["inspektim"] = ViewBag.inspektim;
+                        Session["id"] = ViewBag.Id;
+                        //var a = Session["a"] as string;
+                    }
+                    i += 1;
+                }
+
+                @if (i == 1)
+                {
+                    <br />
+                    <h6>Folderi është bosh</h6>
+                }
+
+                <script type="text/javascript">
+                    function klikoFolder(Subjekt_Id, Inspektim_Id, Lloj_Id) {
+                        window.location.replace("/Home/Dokumente?Subjekt_Id=" + Subjekt_Id + "&Inspektim_Id=" + Inspektim_Id + "&Lloj_Id=" + Lloj_Id);
+                    }
+                </script>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var Files = [];
+        $(document).ready(() => {
+            $('input#files').on('change', (e) => {
+                let files = e.target.files;
+                $('div.files-container').html("");
+                for (let i = 0; i < files.length; i++) {
+                    let file = files[i];
+                    let div = document.createElement('div');
+                    div.id = Files.length;
+                    $(div).append(`${file.name}`);
+                    $('div.files-container').append(div);
+                    Files.push(file);
+                    updateLabel();
+                }
+            });
+        });
+
+        function updateLabel() {
+            let text = 'Ngarko';
+            $('#files-count').html(text);
+        }
+    </script>
+
+    <script>
+        function kontrolloNgarkim() {
+            if (document.getElementById('files').value == "") {
+                $('div.files-container').html("Ngarkoni të paktën një dokument!");
+            }
+        }
+    </script>
+
+
+    <script>
+        function mbyllModal() {
+            document.getElementById("files-container").innerHTML = "";
+            document.getElementById("zyraUpload").value = "";
+            document.getElementById("kutiaUpload").value = "";
+            document.getElementById("raftiUpload").value = "";
+            $('#fusha').tagsinput('removeAll');
+            document.getElementById("files").value = "";
+        }
+
+    </script>
+
+    <script>
+                function shkarkoZip() {
+                    if ($("input[name='subjekt']:checked").val() == "on") {
+                        $.ajax({
+                            type: "GET",
+                            url: '@Url.Action("ShkarkoZipSubjekt", "Home")',
+                            contentType: "application/json; charset=utf-8",
+                            success: function () {
+                                window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "ShkarkoZipSubjekt" })";
+                            }
+                        })
+                    }
+
+                    else {
+                        var Subjekt_Id = @ViewBag.Subjekt;
+                        var Inspektim_Id = @ViewBag.Inspektim;
+                        var Lloj_Id = $("input[name='Checkboxes']:checked").val();
+                        $.ajax({
+                            type: "GET",
+                            url: '/Home/ShkarkoLlojSpecifik?Subjekt_Id=' + Subjekt_Id + "&Inspektim_Id=" + Inspektim_Id + "&Lloj_Id=" + Lloj_Id,
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                 'Subjekt_Id': Subjekt_Id,
+                                 'Inspektim_Id': Inspektim_Id,
+                                 'Lloj_Id': Lloj_Id
+                               }),
+                            success: function () {
+                                window.location.href = "@Url.RouteUrl(new { Controller = "Home", Action = "ShkarkoLlojSpecifik" })/?Subjekt_Id=" + Subjekt_Id + "&Inspektim_Id=" + Inspektim_Id + "&Lloj_Id=" + Lloj_Id;
+                               }
+                            })
+                        }
+                }
+    </script>
+
+    <script>
+        $("input[name='subjekt']").on('change', function () {
+            $("button[name='shkarko']").prop('disabled', !$("input[name='subjekt']:checked").length);
+            $("button[name='shto']").prop('disabled', $("input[name='subjekt']:checked").length);
+
+        })
+    </script>
+
+    <script>
+        $("input[name='Checkboxes']").on('change', function () {
+            $("button[name='shkarko']").prop('disabled', !$("input[name='subjekt']:checked").length);
+        })
+    </script>
+
+    <script>
+        $("input[name='Checkboxes']").on('change', function () {
+            $("input[name='Checkboxes']").not(this).prop('checked', false);
+        });
+    </script>
+
+
+    <script>
+        $("input[name='Checkboxes']").on('change', function () {
+            $("button[name='shkarko']").prop('disabled', !$("input[name='Checkboxes']:checked").length);
+            $("button[name='shto']").prop('disabled', $("input[name='Checkboxes']:checked").length);
+
+        })
+    </script>
+
+    <script>
+        $("input[name='Checkboxes']").on('change', function () {
+            $("input[name='subjekt']").prop('checked', false);
+        })
+    </script>
+
+    <script>
+        $("input[name='subjekt']").on('change', function () {
+            $("input[name='Checkboxes']").prop('checked', false);
+        })
+    </script>
+
+
+    <script>
+        $("input[name='Checkboxes']").on('change', function () {
+            $("input[name='Checkboxes']").not(this).prop('checked', false);
+        });
+    </script>
+    <script>
+        $("input[name='Checkboxes']").on('change', function () {
+            $("button[name='shkarko']").prop('disabled', !$("input[name='Checkboxes']:checked").length);
+        })
+    </script>
+
+
+
+
+    <style>
+        label.custom-input {
+            border: 1px solid black;
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100px;
+        }
+
+            label.custom-input input {
+                display: none;
+            }
+
+        .files-container {
+            display: flex;
+            flex-direction: column;
+            padding: 5px;
+        }
+
+            .files-container div {
+                padding: 5px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2px;
+                border-bottom: 1px solid;
+            }
+
+        span.delete-file {
+            padding: 5px;
+            color: white;
+            background-color: red;
+            cursor: pointer;
+        }
+    </style>
+
+    <script src="~/Scripts/bootstrap-tagsinput.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="sweetalert2.all.min.js"></script>
+
+</body>

@@ -1,0 +1,80 @@
+﻿@model  ArkivaDenis.Models.Llogaria
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/_LayoutPage1.cshtml";
+}
+
+
+<head>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="w3l-login-form">
+    @using (Html.BeginForm("Arkiva", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="text-center">
+        <form class="form-signin">
+            <h1 class="h3 mb-3 font-weight-normal">Identifikohu</h1>
+            @Html.ValidationSummary(false, "", new { @class = "custom-validation-summary" })
+            <style>
+                .custom-validation-summary ul {
+                    list-style-type: none;
+                    color: red;
+                    padding: 0;
+                }
+            </style>
+
+            <label for="inputEmail" class="sr-only" style="margin-top:10px">Emri i përdoruesit</label>
+            <input type="text" id="username" name="Username" class="form-control" placeholder="Emri i përdoruesit" autocomplete="off" required="required" oninvalid="this.setCustomValidity('Plotësoni emrin e përdoruesit')"
+                   oninput="this.setCustomValidity('')" style="margin-bottom:10px">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="password" name="Password" class="form-control" autocomplete="off" placeholder="Fjalëkalimi" required="required" oninvalid="this.setCustomValidity('Plotësoni fjalëkalimin')"
+                   oninput="this.setCustomValidity('')" style="margin-bottom:10px">
+
+            <div class="row" style="margin-top:20px">
+
+                <div class="flex-column-reverse">
+                    <button type="submit" class="btn btn-primary" id="btnSave" style="margin-right:30px; margin-left:70px">Hyr</button>
+
+                </div>
+
+                <div class="flex-column-reverse">
+                    @Html.ActionLink("Regjistrohu", "Regj", "Home", null, new { id = "OT", @class = "btn btn-secondary", @role = "button" })
+                </div>
+
+            </div>
+
+        </form>
+
+        <p class="mt-5 mb-3 text-muted">&copy; Arkiva 2020</p>
+    </div>   
+    }
+</body>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            $.ajax(
+            {
+                type: "POST", //HTTP POST Method
+                url: "Home/Login", // Controller/View
+                data: { //Passing data
+                    Username: $("#username").val(), //Reading text box values using Jquery
+                    Password: $("#password").val(),
+                }
+
+            });
+
+        });
+    });
+
+</script>

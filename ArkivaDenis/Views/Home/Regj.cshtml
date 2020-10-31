@@ -1,0 +1,89 @@
+﻿@model  ArkivaDenis.Models.Llogaria
+
+@{
+                /**/
+
+                /**/
+
+                ViewBag.Title = "Regj";
+                Layout = "~/Views/_LayoutPage1.cshtml";
+}
+
+
+
+<h1></h1>
+<head>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/sign-in/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="w3l-login-form">
+    @using (Html.BeginForm("Regjistrohu", "Home", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="text-center">
+            <form class="form-signin">
+                <h1 class="h3 mb-3 font-weight-normal">Vendos të dhënat e tua</h1>
+                @Html.ValidationSummary(false, "", new { @class = "custom-validation-summary" })
+                <style>
+                    .custom-validation-summary ul {
+                        list-style-type: none;
+                        color: red;
+                        padding: 0;
+                    }
+                </style>
+                <label for="inputPassword" class="sr-only">Emri</label>
+                <input type="text" id="emer" name="Emer" autocomplete="off" class="form-control" placeholder="Emri" required="required" oninvalid="this.setCustomValidity('Plotësoni emrin')"
+                       oninput="this.setCustomValidity('')" style="margin-bottom:20px">
+                <label for="inputPassword" class="sr-only">Mbiemri</label>
+                <input type="text" id="mbiemer" name="Mbiemer" autocomplete="off" class="form-control" placeholder="Mbiemri" required="required" oninvalid="this.setCustomValidity('Plotësoni mbiemrin')"
+                       oninput="this.setCustomValidity('')" style="margin-bottom:20px">
+                <label for="inputEmail" class="sr-only">Emri i përdoruesit</label>
+                <input type="text" id="username" name="Username" class="form-control" autocomplete="off" placeholder="Emri i përdoruesit" required="required" oninvalid="this.setCustomValidity('Plotësoni emrin e përdoruesit')"
+                       oninput="this.setCustomValidity('')" style="margin-bottom:20px">
+                <label for="inputPassword" class="sr-only">Password</label>
+                <input type="password" id="password" name="Password" autocomplete="off" class="form-control" placeholder="Fjalëkalimi" required="required" oninvalid="this.setCustomValidity('Plotësoni fjalëkalimin')"
+                       oninput="this.setCustomValidity('')" style="margin-bottom:20px">
+
+                <div class="row" style="margin-top:20px">
+                    <div class="flex-column-reverse">
+                        <button type="submit" class="btn btn-primary" id="btnSave" btn btn-primary" style="margin-right:60px; margin-left:12px">Ruaj</button>
+                    </div>
+                    <div class="flex-column-reverse">
+                        @Html.ActionLink("Kthehu tek identifikimi", "Login", "Home", null, new { id = "OT", @class = "btn btn-secondary", @role = "button" })
+                    </div>
+
+
+                </div>
+
+            </form>
+            <p class="mt-5 mb-3 text-muted">&copy;Arkiva 2020</p>
+        </div>
+    }
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            $.ajax(
+                {
+                    type: "POST", //HTTP POST Method
+                    url: "Home/Regjistrohu", // Controller/View
+                    data:
+                    { //Passing data
+                        Username: $("#username").val(), //Reading text box values using Jquery
+                        Password: $("#password").val(),
+                        Emer: $("#emer").val(),
+                        Mbiemer: $("#mbiemer").val(),
+                    }
+
+                });
+
+        });
+    });
+
+</script>
